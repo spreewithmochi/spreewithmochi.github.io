@@ -1,0 +1,791 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Casio Spree</title>
+	<style>
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			background-color: #f1f1f1;
+			margin: 0;
+			padding: 0 10px;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
+
+		.bg {
+			background: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			text-align: center;
+			padding: 10px;
+			border-radius: 25px;
+		}
+
+		.bg img {
+			width: 100%;
+			height: auto;
+		}
+
+		.bg img+p {
+			margin: 0;
+			font-weight: 700;
+		}
+		.bg h4 {
+			font-size: clamp(12px, 2vw, 16px);
+			margin-bottom: 5px;
+		}
+
+		.bg .price {
+			font-weight: 700;
+		}
+
+		.bg button {
+			background: #000;
+			color: #fff;
+			cursor: pointer;
+		}
+		#cartPopup #closeCartBtn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 20px;
+			font-weight: 700;
+			cursor: pointer;
+		}
+		button {
+			cursor: pointer;
+			padding: 5px 10px;
+			border: 0;
+		}
+		.removeBtn {
+			background: #ff0000;
+			color: #fff;
+		}
+		#copyOrderBtn {
+			background: #000;
+			color: #fff;
+		}
+		#telegramBtn {
+			background: #59ABF5;
+			color: #fff;
+		}
+		@media screen and (min-width: 768px) {
+			body {
+				grid-template-columns: repeat(4, 1fr);
+
+			}
+		}
+
+		@media screen and (min-width: 1200px) {
+			body {
+				grid-template-columns: repeat(6, 1fr);
+
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-201WA-9AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295485.jpg"><p>Item code: A01</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-201WA-9AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91W-1JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295508.jpg"><p>Item code: A02</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91W-1JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LQ-139AMV-7B3LWJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295522.jpg"><p>Item code: A03</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LQ-139AMV-7B3LWJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7B2LLJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295591.jpg"><p>Item code: A04</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MQ-24-7B2LLJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-9ELJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295614.jpg"><p>Item code: A05</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MQ-24-9ELJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LQ-142-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294266.jpg"><p>Item code: A06</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LQ-142-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch LQ-139L-6BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294228.jpg"><p>Item code: A07</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch LQ-139L-6BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch LQ-139L-4B2JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294211.jpg"><p>Item code: A08</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch LQ-139L-4B2JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WM-2AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294082.jpg"><p>Item code: A09</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WM-2AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-200W-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295478.jpg"><p>Item code: A10</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-200W-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-84W-1QJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295492.jpg"><p>Item code: A11</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-84W-1QJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-94WA-9JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295515.jpg"><p>Item code: A12</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-94WA-9JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LQ-139BMV-7ELJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295539.jpg"><p>Item code: A13</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LQ-139BMV-7ELJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7BLLJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295607.jpg"><p>Item code: A14</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MQ-24-7BLLJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MQ-27-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294198.jpg"><p>Item code: A15</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MQ-27-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WM-3AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294099.jpg"><p>Item code: A16</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WM-3AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch LQ-139L-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294235.jpg"><p>Item code: A17</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch LQ-139L-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-105W-1AWJH black 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295461.jpg"><p>Item code: A18</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-105W-1AWJH black 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WM-7AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294105.jpg"><p>Item code: A19</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WM-7AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$35</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch A178WA-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295379.jpg"><p>Item code: A20</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch A178WA-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295409.jpg"><p>Item code: A21</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO double-hand quartz watch AW-80-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LQ-398GL-7B3LJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295546.jpg"><p>Item code: A22</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LQ-398GL-7B3LJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-1BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295621.jpg"><p>Item code: A23</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MRW-200HJ-1BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MTP-1129AA-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295645.jpg"><p>Item code: A24</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MTP-1129AA-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-4BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295751.jpg"><p>Item code: A25</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MW-240-4BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch W-215H-7AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295812.jpg"><p>Item code: A26</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch W-215H-7AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24D-7EJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295911.jpg"><p>Item code: A27</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MQ-24D-7EJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WS-4JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images/Image_20240510154606.jpg"><p>Item code: A28</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WS-4JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch MQ-24S-4BJF 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526345944.jpg"><p>Item code: A29</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch MQ-24S-4BJF 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-7AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295416-1.jpg"><p>Item code: A30</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO double-hand quartz watch AW-80-7AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch DB-36-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295454.jpg"><p>Item code: A31</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch DB-36-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LQ-398GL-7B4LJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295553.jpg"><p>Item code: A32</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LQ-398GL-7B4LJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-7EJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295638.jpg"><p>Item code: A33</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MRW-200HJ-7EJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295737.jpg"><p>Item code: A34</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MW-240-1BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch W-215H-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295805.jpg"><p>Item code: A35</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch W-215H-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch W-96H-1AJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295843.jpg"><p>Item code: A36</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch W-96H-1AJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WS-2JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294112.jpg"><p>Item code: A37</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WS-2JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch MQ-24S-2BJF 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526345906.jpg"><p>Item code: A38</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch MQ-24S-2BJF 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO Casio three-hand quartz watch MQ-24S-7BJF 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526345982.jpg"><p>Item code: A39</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO Casio three-hand quartz watch MQ-24S-7BJF 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO double-hand quartz watch AW-80V-3BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295430.jpg"><p>Item code: A40</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO double-hand quartz watch AW-80V-3BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch A168WA-1A2WJR 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526271373.jpg"><p>Item code: A41</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch A168WA-1A2WJR 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch F-91WS-7JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526294136.jpg"><p>Item code: A42</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch F-91WS-7JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch A164WA-1QJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295362.jpg"><p>Item code: A43</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch A164WA-1QJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO electronic dial quartz watch A158WA-1JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/1_20240722140759.jpg"><p>Item code: A44</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO electronic dial quartz watch A158WA-1JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch LTP-1177A-4A1JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295584.jpg"><p>Item code: A45</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch LTP-1177A-4A1JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MTP-1402L-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295706.jpg"><p>Item code: A46</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MTP-1402L-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MW-59-7BJH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295775.jpg"><p>Item code: A47</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MW-59-7BJH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+
+	<div class="bg">
+		<img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1B2JH 1 piece" src="https://donki-ec-static-1306051524.file.myqcloud.com/images-ss/4549526295744.jpg"><p>Item code: A48</p>
+
+		<div class="desc">
+			<h4 class="goodsName">
+				CASIO three-hand quartz watch MW-240-1B2JH 1 piece
+			</h4>
+			<div class="currentPrice"><span class="price">$45</span></div>
+		</div>
+	</div>
+<!-- Shopping Cart Image (Fixed position) -->
+<div id="cartIconWrapper" style="position: fixed; bottom: 20px; right: 10px; cursor: pointer;background: #fff;padding: 10px;border-radius: 100%;border: 2px solid #000;">
+	<img src="cart.png" alt="Shopping Cart" style="width: 40px; height: auto;">
+	<span id="cartCount" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
+</div>
+
+<!-- Cart Popup -->
+<div id="cartPopup" style="display: none; position: fixed; bottom: 5%; right: 5%; top: 5%; left: 5%; padding: 20px; background: white; border: 2px solid #000; max-width: 400px; margin: 0 auto;">
+	<h4>Your Cart</h4>
+	<div id="cartItems"></div>
+	<p id="orderInstructions" style="font-size: 12px;display: none;">To order, click on copy to clipboard and dm <a href="https://t.me/jeankuah" target="_blank">@jeankuah</a></p>
+	<button id="copyOrderBtn" style="display: none; margin-top: 10px;">Copy order to clipboard</button>
+
+    <!-- Telegram button (Initially hidden) -->
+    <button id="telegramBtn" style="display: none; margin-top: 10px;">
+        <a href="https://t.me/jeankuah/" target="_blank" style="text-decoration: none; color: inherit;">Telegram @jeankuah</a>
+    </button>
+	<span id="closeCartBtn">&#10060;</span>
+</div>
+
+<script>
+	// Create an array to store cart items
+	// Create an array to store cart items
+let cart = [];
+
+// Add "Add to Cart" buttons dynamically
+document.querySelectorAll('.bg').forEach((bg, index) => {
+    // Create the "Add to Cart" button
+    let addToCartBtn = document.createElement('button');
+    addToCartBtn.textContent = 'Add to Cart';
+    addToCartBtn.style.marginTop = '10px';
+
+    // Append the button after the .desc element
+    let desc = bg.querySelector('.desc');
+    desc.insertAdjacentElement('afterend', addToCartBtn);
+
+    // Event listener for "Add to Cart" button
+    addToCartBtn.addEventListener('click', function() {
+        let itemCode = bg.querySelector('p').textContent;
+        let price = bg.querySelector('.price').textContent;
+
+        // Check if the item already exists in the cart
+        let existingItem = cart.find(item => item.code === itemCode);
+
+        if (existingItem) {
+            // If item exists, increment its quantity
+            existingItem.quantity += 1;
+        } else {
+            // If item doesn't exist, add it to the cart with quantity 1
+            let cartItem = {
+                code: itemCode,
+                price: price,
+                quantity: 1
+            };
+            cart.push(cartItem);
+        }
+
+        // Update the cart count and make it visible
+        updateCartCount();
+    });
+});
+
+// Function to update the cart popup
+function updateCartPopup() {
+    let cartItemsDiv = document.getElementById('cartItems');
+    cartItemsDiv.innerHTML = ''; // Clear the previous cart items
+
+    // Check if cart is empty
+    if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p>Your cart is empty</p>';
+        document.getElementById('orderInstructions').style.display = 'none';
+        document.getElementById('copyOrderBtn').style.display = 'none';
+        document.getElementById('telegramBtn').style.display = 'none';
+        return;
+    }
+
+    // Populate the cart popup with the cart items
+    cart.forEach((item, index) => {
+        let itemDiv = document.createElement('div');
+        itemDiv.style.display = 'flex';
+        itemDiv.style.justifyContent = 'space-between';
+        itemDiv.style.alignItems = 'center';
+        itemDiv.style.marginBottom = '10px';
+
+        // Create the text for the cart item (show quantity if greater than 1)
+        let p = document.createElement('p');
+        p.textContent = `${item.code} - Price: ${item.price} x ${item.quantity}`;
+
+        // Create the "Remove" button
+        let removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.classList.add('removeBtn'); // Adds the class "removeBtn"
+        removeBtn.style.marginLeft = '10px';
+
+        // Event listener for "Remove" button
+        removeBtn.addEventListener('click', function() {
+            // Decrease the quantity of the item
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+            } else {
+                // Remove the item from the cart if quantity is 1
+                cart.splice(index, 1);
+            }
+            // Update the cart popup
+            updateCartPopup();
+
+            // Update cart count when an item is removed
+            updateCartCount();
+        });
+
+        // Append the item text and the remove button to the item div
+        itemDiv.appendChild(p);
+        itemDiv.appendChild(removeBtn);
+
+        // Append the item div to the cart popup
+        cartItemsDiv.appendChild(itemDiv);
+    });
+
+    // Show the "Copy order to clipboard" and "Telegram" buttons if there are items in the cart
+    document.getElementById('orderInstructions').style.display = 'block';
+    document.getElementById('copyOrderBtn').style.display = 'block';
+    document.getElementById('telegramBtn').style.display = 'block';
+}
+
+// Function to update the cart count badge
+function updateCartCount() {
+    let cartCount = document.getElementById('cartCount');
+    let count = cart.reduce((acc, item) => acc + item.quantity, 0); // Sum up the quantities
+
+    // If there are items in the cart, show the count
+    if (count > 0) {
+        cartCount.style.display = 'inline';
+        cartCount.textContent = count;
+    } else {
+        // If no items in the cart, hide the badge
+        cartCount.style.display = 'none';
+    }
+}
+
+// Event listener for the cart icon (show cart popup)
+document.getElementById('cartIconWrapper').addEventListener('click', function() {
+    updateCartPopup(); // Update the cart popup with current items
+    document.getElementById('cartPopup').style.display = 'block'; // Show the cart popup
+});
+
+// Event listener for "Close" button in cart popup
+document.getElementById('closeCartBtn').addEventListener('click', function() {
+    document.getElementById('cartPopup').style.display = 'none'; // Hide the cart popup
+});
+
+// Event listener for "Copy order to clipboard" button
+document.getElementById('copyOrderBtn').addEventListener('click', function() {
+    let cartText = 'Casio Spree Order\n';
+
+    // Loop through the cart items and append to the cartText string
+    cart.forEach((item) => {
+        cartText += `${item.code} - Price: ${item.price} x ${item.quantity}\n`;
+    });
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(cartText).then(() => {
+        alert('Order copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+});
+</script>
+</body>
+
+</html>
