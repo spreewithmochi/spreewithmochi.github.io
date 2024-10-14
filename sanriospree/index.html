@@ -6,62 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sanrio Spree</title>
     <style>
-        /* body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 10px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .pdt {
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            flex-direction: column;
-            text-align: center;
-            padding: 10px;
-            border-radius: 25px;
-        }
-
-        .pdt img {
-            width: 100%;
-            max-width: 160px;
-            height: auto !important;
-            display: block;
-            object-fit: contain;
-        }
-
-        .pdt img+p {
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .pdt p {
-            margin: 5px 0 0;
-        }
-
-        .pdt .pdtname {
-            margin: 5px 0 0;
-        }
-
-        .pdt .pdtdesc {
-            font-size: clamp(12px, 2vw, 16px);
-            margin-bottom: 5px;
-        }
-
-        .pdt .price {
-            font-weight: 700;
-        }
-
-        .pdt button {
-            background: #ff2a96;
-            color: #fff;
-            cursor: pointer;
-        } */
 
         /* Windows 95 font */
         body {
@@ -131,6 +75,7 @@
             box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #404040;
             cursor: pointer;
             margin-top: 10px;
+            color: #000080;
         }
 
         button:active {
@@ -152,38 +97,19 @@
             border: 0;
         }
 
-        .removeBtn {
-            background: #ff0000;
-            color: #fff;
-        }
-
-        #copyOrderBtn {
-            background: #000;
-            color: #fff;
-        }
-
-        #telegramBtn {
-            background: #59ABF5;
-            color: #fff;
-        }
 
         @media screen and (min-width: 768px) {
-            body {
+            .window {
                 grid-template-columns: repeat(4, 1fr);
 
             }
         }
 
         @media screen and (min-width: 1200px) {
-            body {
+            .window {
                 grid-template-columns: repeat(6, 1fr);
 
             }
-        }
-
-        @font-face {
-            font-family: 'MS Sans Serif';
-            src: url('https://fonts.cdnfonts.com/s/15478/MS_Sans_Serif.woff') format('woff');
         }
 
         #cartPopup * {
@@ -231,16 +157,6 @@
         }
 
         #cartPopup button {
-            display: inline-block;
-            font-family: 'MS Sans Serif', Arial, sans-serif;
-            font-size: 12px;
-            background-color: #C3C7CB;
-            border: 2px solid #000;
-            padding: 4px 10px;
-            margin-top: 10px;
-            cursor: pointer;
-            box-shadow: 1px 1px 0px #fff, -1px -1px 0px #808080;
-            outline: none;
             color: #000080;
         }
 
@@ -284,6 +200,7 @@
         #cartPopup #cartItems::-webkit-scrollbar-track {
             background-color: #C3C7CB;
         }
+
         #cartIconWrapper img {
             border: 0;
         }
@@ -3654,9 +3571,9 @@
         <!-- Shopping Cart Image (Fixed position) -->
         <div id="cartIconWrapper"
             style="position: fixed; bottom: 20px; right: 10px; cursor: pointer;background: #fff;border-radius: 100%;">
-            <img src="cart.png" alt="Shopping Cart" style="width: 60px; height: auto;">
+            <img src="cart2.png" alt="Shopping Cart" style="width: 60px; height: auto;">
             <span id="cartCount"
-                style="position: absolute; top: -5px; right: -5px; background-color: #000080; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
+                style="position: absolute; top: -5px; right: -5px; background-color: #E91E63; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
         </div>
 
         <!-- Cart Popup -->
@@ -3676,152 +3593,176 @@
     </div>
 
     <script>
-        // Create an array to store cart items
-        // Create an array to store cart items
-        let cart = [];
+     // Create an array to store cart items
+let cart = [];
 
-        // Add "Add to Cart" buttons dynamically
-        document.querySelectorAll('.pdt').forEach((pdt, index) => {
-            // Create the "Add to Cart" button
-            let addToCartBtn = document.createElement('button');
-            addToCartBtn.textContent = 'Add to Cart';
-            addToCartBtn.style.marginTop = '10px';
+// Add "Add to Cart" buttons dynamically
+document.querySelectorAll('.pdt').forEach((pdt, index) => {
+    // Create the "Add to Cart" button
+    let addToCartBtn = document.createElement('button');
+    addToCartBtn.textContent = 'Add to Cart';
+    addToCartBtn.style.marginTop = '10px';
 
-            // Append the button after the .desc element
-            let desc = pdt.querySelector('.price');
-            desc.insertAdjacentElement('afterend', addToCartBtn);
+    // Append the button after the .desc element
+    let desc = pdt.querySelector('.price');
+    desc.insertAdjacentElement('afterend', addToCartBtn);
 
-            // Event listener for "Add to Cart" button
-            addToCartBtn.addEventListener('click', function () {
-                let itemCode = pdt.querySelector('p').textContent;
-                let price = pdt.querySelector('.price').textContent;
+    // Event listener for "Add to Cart" button
+    addToCartBtn.addEventListener('click', function () {
+        let itemCode = pdt.querySelector('p').textContent;
+        let price = pdt.querySelector('.price').textContent;
+        let imageSrc = pdt.querySelector('img').src; // Get the image source
 
-                // Check if the item already exists in the cart
-                let existingItem = cart.find(item => item.code === itemCode);
+        // Check if the item already exists in the cart
+        let existingItem = cart.find(item => item.code === itemCode);
 
-                if (existingItem) {
-                    // If item exists, increment its quantity
-                    existingItem.quantity += 1;
-                } else {
-                    // If item doesn't exist, add it to the cart with quantity 1
-                    let cartItem = {
-                        code: itemCode,
-                        price: price,
-                        quantity: 1
-                    };
-                    cart.push(cartItem);
-                }
-
-                // Update the cart count and make it visible
-                updateCartCount();
-            });
-        });
-
-        //
-        // Function to update the cart popup
-        function updateCartPopup() {
-            let cartItemsDiv = document.getElementById('cartItems');
-            cartItemsDiv.innerHTML = ''; // Clear the previous cart items
-
-            // Check if cart is empty
-            if (cart.length === 0) {
-                cartItemsDiv.innerHTML = '<p>Your cart is empty</p>';
-                document.getElementById('orderInstructions').style.display = 'none';
-                document.getElementById('copyOrderBtn').style.display = 'none';
-                document.getElementById('telegramBtn').style.display = 'none';
-                return;
-            }
-
-            // Populate the cart popup with the cart items
-            cart.forEach((item, index) => {
-                let itemDiv = document.createElement('div');
-                itemDiv.style.display = 'flex';
-                itemDiv.style.justifyContent = 'space-between';
-                itemDiv.style.alignItems = 'center';
-                itemDiv.style.marginBottom = '10px';
-
-                // Create the text for the cart item (show quantity if greater than 1)
-                let p = document.createElement('p');
-                p.textContent = `${item.code} - Price: ${item.price} x ${item.quantity}`;
-
-                // Create the "Remove" button
-                let removeBtn = document.createElement('button');
-                removeBtn.textContent = 'Remove';
-                removeBtn.classList.add('removeBtn'); // Adds the class "removeBtn"
-                removeBtn.style.marginLeft = '10px';
-
-                // Event listener for "Remove" button
-                removeBtn.addEventListener('click', function () {
-                    // Decrease the quantity of the item
-                    if (item.quantity > 1) {
-                        item.quantity -= 1;
-                    } else {
-                        // Remove the item from the cart if quantity is 1
-                        cart.splice(index, 1);
-                    }
-                    // Update the cart popup
-                    updateCartPopup();
-
-                    // Update cart count when an item is removed
-                    updateCartCount();
-                });
-
-                // Append the item text and the remove button to the item div
-                itemDiv.appendChild(p);
-                itemDiv.appendChild(removeBtn);
-
-                // Append the item div to the cart popup
-                cartItemsDiv.appendChild(itemDiv);
-            });
-
-            // Show the "Copy order to clipboard" and "Telegram" buttons if there are items in the cart
-            document.getElementById('orderInstructions').style.display = 'block';
-            document.getElementById('copyOrderBtn').style.display = 'block';
-            document.getElementById('telegramBtn').style.display = 'block';
+        if (existingItem) {
+            // If item exists, increment its quantity
+            existingItem.quantity += 1;
+        } else {
+            // If item doesn't exist, add it to the cart with quantity 1 and the image
+            let cartItem = {
+                code: itemCode,
+                price: price,
+                image: imageSrc, // Add the image source to the cart item
+                quantity: 1
+            };
+            cart.push(cartItem);
         }
 
-        // Function to update the cart count badge
-        function updateCartCount() {
-            let cartCount = document.getElementById('cartCount');
-            let count = cart.reduce((acc, item) => acc + item.quantity, 0); // Sum up the quantities
+        // Sort the cart by item code
+        sortCart();
 
-            // If there are items in the cart, show the count
-            if (count > 0) {
-                cartCount.style.display = 'inline';
-                cartCount.textContent = count;
+        // Update the cart count and make it visible
+        updateCartCount();
+
+        // Update the cart popup immediately (even if the popup is already open)
+        updateCartPopup();
+    });
+});
+
+// Function to sort the cart by item code in ascending order
+function sortCart() {
+    cart.sort((a, b) => {
+        // Extract numeric values from the item codes for comparison
+        let codeA = parseInt(a.code.replace(/\D/g, '')); // Remove non-numeric characters
+        let codeB = parseInt(b.code.replace(/\D/g, '')); // Remove non-numeric characters
+        return codeA - codeB;
+    });
+}
+
+// Function to update the cart popup
+function updateCartPopup() {
+    let cartItemsDiv = document.getElementById('cartItems');
+    cartItemsDiv.innerHTML = ''; // Clear the previous cart items
+
+    // Check if cart is empty
+    if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p>Your cart is empty</p>';
+        document.getElementById('orderInstructions').style.display = 'none';
+        document.getElementById('copyOrderBtn').style.display = 'none';
+        document.getElementById('telegramBtn').style.display = 'none';
+        return;
+    }
+
+    // Populate the cart popup with the cart items
+    cart.forEach((item, index) => {
+        let itemDiv = document.createElement('div');
+        itemDiv.style.display = 'flex';
+        itemDiv.style.alignItems = 'center';
+        itemDiv.style.marginBottom = '10px';
+
+        // Create the image element for the thumbnail
+        let img = document.createElement('img');
+        img.src = item.image; // Use the image source from the cart item
+        img.style.width = '60px'; // Set the thumbnail size
+        img.style.height = '60px';
+        img.style.marginRight = '10px';
+
+        // Create the text for the cart item (show quantity if greater than 1)
+        let p = document.createElement('p');
+        p.textContent = `${item.code} - Price: ${item.price} x ${item.quantity}`;
+
+        // Create the "Remove" button
+        let removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.classList.add('removeBtn'); // Adds the class "removeBtn"
+        removeBtn.style.marginLeft = '10px';
+
+        // Event listener for "Remove" button
+        removeBtn.addEventListener('click', function () {
+            // Decrease the quantity of the item
+            if (item.quantity > 1) {
+                item.quantity -= 1;
             } else {
-                // If no items in the cart, hide the badge
-                cartCount.style.display = 'none';
+                // Remove the item from the cart if quantity is 1
+                cart.splice(index, 1);
             }
-        }
+            // Update the cart popup
+            updateCartPopup();
 
-        // Event listener for the cart icon (show cart popup)
-        document.getElementById('cartIconWrapper').addEventListener('click', function () {
-            updateCartPopup(); // Update the cart popup with current items
-            document.getElementById('cartPopup').style.display = 'block'; // Show the cart popup
+            // Update cart count when an item is removed
+            updateCartCount();
         });
 
-        // Event listener for "Close" button in cart popup
-        document.getElementById('closeCartBtn').addEventListener('click', function () {
-            document.getElementById('cartPopup').style.display = 'none'; // Hide the cart popup
-        });
+        // Append the image, item text, and the remove button to the item div
+        itemDiv.appendChild(img);
+        itemDiv.appendChild(p);
+        itemDiv.appendChild(removeBtn);
 
-        // Event listener for "Copy order to clipboard" button
-        document.getElementById('copyOrderBtn').addEventListener('click', function () {
-            let cartText = 'Sanrio Spree Order\n';
+        // Append the item div to the cart popup
+        cartItemsDiv.appendChild(itemDiv);
+    });
 
-            // Loop through the cart items and append to the cartText string
-            cart.forEach((item) => {
-                cartText += `${item.code} - Price: ${item.price} x ${item.quantity}\n`;
-            });
+    // Show the "Copy order to clipboard" and "Telegram" buttons if there are items in the cart
+    document.getElementById('orderInstructions').style.display = 'block';
+    document.getElementById('copyOrderBtn').style.display = 'block';
+    document.getElementById('telegramBtn').style.display = 'block';
+}
 
-            // Copy to clipboard
-            navigator.clipboard.writeText(cartText).then(() => {
-                alert('Order copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        });
+// Function to update the cart count badge
+function updateCartCount() {
+    let cartCount = document.getElementById('cartCount');
+    let count = cart.reduce((acc, item) => acc + item.quantity, 0); // Sum up the quantities
+
+    // If there are items in the cart, show the count
+    if (count > 0) {
+        cartCount.style.display = 'inline';
+        cartCount.textContent = count;
+    } else {
+        // If no items in the cart, hide the badge
+        cartCount.style.display = 'none';
+    }
+}
+
+// Event listener for the cart icon (show cart popup)
+document.getElementById('cartIconWrapper').addEventListener('click', function () {
+    updateCartPopup(); // Update the cart popup with current items
+    document.getElementById('cartPopup').style.display = 'block'; // Show the cart popup
+});
+
+// Event listener for "Close" button in cart popup
+document.getElementById('closeCartBtn').addEventListener('click', function () {
+    document.getElementById('cartPopup').style.display = 'none'; // Hide the cart popup
+});
+
+// Event listener for "Copy order to clipboard" button
+document.getElementById('copyOrderBtn').addEventListener('click', function () {
+    let cartText = 'Sanrio Spree Order\n';
+
+    // Loop through the cart items and append to the cartText string
+    cart.forEach((item) => {
+        cartText += `${item.code} - Price: ${item.price} x ${item.quantity}\n`;
+    });
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(cartText).then(() => {
+        alert('Order copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+});
+
     </script>
 
 
