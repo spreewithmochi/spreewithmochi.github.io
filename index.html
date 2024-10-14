@@ -28,6 +28,16 @@
             text-align: center;
         }
 
+        .profilepic {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            border-radius: 100%;
+            overflow: hidden;
+        }
+        .profilepic img {
+            width: 100%;
+        }
         h2 {
             color: #000;
             margin: 0;
@@ -57,22 +67,31 @@
         a:hover {
             background-color: #000;
         }
+        a.bluebg {
+            background-color: #179ADB;
+            color: #fff;
+        }
+
+        a.bluebg:hover {
+            background-color: #179ADB;
+        }
         a.pinkbg {
-            background-color: #85e7ff;
-            color: #000;
+            background-color: #EC7F93;
+            color: #fff;
         }
 
         a.pinkbg:hover {
-            background-color: #85e7ff;
+            background-color: #EC7F93;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Spree With Mochi</h2>
-        <h4>Ongoing Spree</h4>
-        <p>Japan Spree 30 Oct - 2 Nov</p>
-        <a href="/casiospree/" target="_self">Casio Spree</a>
+        <div class="profilepic"><img src="./profilepic.jpg" alt=""></div>
+        <h2>SPREE WITH MOCHI</h2>
+        <p>Japan Spree<br/>30 Oct - 2 Nov<br/>⛩️🍣</p>
+        <p>Click buttons below to view catalogue</p>
+        <a href="/casiospree/" target="_self" class="bluebg">Casio Spree</a>
         <a href="/sanriospree/" target="_self" class="pinkbg">Sanrio Spree</a>
     </div>
 </body>
