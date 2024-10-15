@@ -7,9 +7,9 @@
     <style>
         /* General page settings */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
+            background-color: #C0C0C0;
+            color: black;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,74 +20,78 @@
 
         /* Main content container */
         .container {
-            background-color: white;
+            background-color: #E0E0E0;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #000;
             max-width: 400px;
+            box-shadow: 2px 2px 0 #808080;
             text-align: center;
         }
 
+        /* Profile pic styling */
         .profilepic {
             width: 80px;
             height: 80px;
             margin: 0 auto 15px;
-            border-radius: 100%;
-            overflow: hidden;
+            border: 2px solid black;
+            background-color: #C0C0C0;
         }
+
         .profilepic img {
             width: 100%;
         }
-        h2 {
-            color: #000;
-            margin: 0;
-        }
 
-        h4 {
-            color: #555;
-            margin-bottom: 20px;
+        /* Headings styling */
+        h2 {
+            color: black;
+            margin: 0;
+            font-size: 22px;
+            text-shadow: 1px 1px #fff;
         }
 
         p {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 20px;
+            color: black;
         }
 
+        /* Button styling */
         a {
+          /* background-color: #C0C0C0;
+            border: 2px solid #808080;
+            padding: 2px 5px;
+            font-family: "MS Sans Serif", Arial, sans-serif;
+            font-size: 12px;
+            
+            cursor: pointer;
+            margin-top: 10px;
+            color: #000080; */
+
             text-decoration: none;
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
+            background-color: #C0C0C0;
+            color: #000080;
+            padding: 8px;
             display: block;
+            border: 2px solid #808080;
             margin-bottom: 10px;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #404040;
+            cursor: pointer;
+        }
+        /* Windows 95 style borders */
+        .container {
+            border-style: solid;
+            border-width: 2px;
+            border-color: #FFFFFF #808080 #808080 #FFFFFF;
         }
 
-        a:hover {
-            background-color: #000;
-        }
-        a.bluebg {
-            background-color: #179ADB;
-            color: #fff;
-        }
-
-        a.bluebg:hover {
-            background-color: #179ADB;
-        }
-        a.pinkbg {
-            background-color: #EC7F93;
-            color: #fff;
-        }
-
-        a.pinkbg:hover {
-            background-color: #EC7F93;
-        }
+        /* Removed the problematic pseudo-element */
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="profilepic"><img src="./profilepic.jpg" alt=""></div>
+        <div class="profilepic"><img src="https://spreewithmochi.github.io/profilepic.jpg" alt=""></div>
         <h2>SPREE WITH MOCHI</h2>
         <p>Japan Spree<br/>30 Oct - 2 Nov<br/>⛩️🍣</p>
         <p>Click buttons below to view catalogue</p>
