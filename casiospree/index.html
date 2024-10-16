@@ -225,10 +225,126 @@
       background: #ff0000;
       color: #fff !important;
     }
+
+    #filterNavbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #C0C0C0;
+      border-bottom: 2px solid #808080;
+      box-shadow: 2px 2px 0px #ffffff, -2px -2px 0px #404040;
+      text-align: left;
+      /* Center-align the dropdown */
+      z-index: 50;
+      /* Ensure it stays above other content */
+      height: 48px;
+    }
+
+    span.logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      z-index: 0;
+      font-size: clamp(14px, 4vw, 18px);
+    }
+
+    #hamburgerMenuIcon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 10px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #sideMenu {
+      height: 100%;
+      /* Full height */
+      width: 0;
+      /* Initially hidden */
+      position: fixed;
+      /* Stay in place */
+      top: 0;
+      right: 0;
+      background: #C3C7CB;
+      box-shadow: inset 2px 2px 0px #fff, inset 1px 1px 0px #808080;
+      /* Same color as your background */
+      overflow-x: hidden;
+      /* Disable horizontal scroll */
+      transition: 0.5s width;
+      /* Smooth transition effect */
+      /* Add padding at the top */
+      z-index: 1050;
+      max-width: 260px;
+    }
+
+    #sideMenu.open {
+      border: 2px solid #000;
+    }
+
+    #sideMenu p {
+      font-weight: 700;
+      padding-left: 20px;
+    }
+
+    /* Menu links inside the side menu */
+    #sideMenu a {
+      padding: 8px 8px 8px 20px;
+      text-decoration: none;
+      font-size: 14px;
+      color: #000;
+      /* Matches the blue color from your theme */
+      display: block;
+      transition: 0.3s;
+    }
+
+    /* Style the close button (top right corner of side menu) */
+    #sideMenu .closeBtn {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      font-size: 24px;
+      margin-left: 50px;
+    }
+
+    /* Add space below navbar to prevent content from overlapping */
+    body {
+      padding-top: 60px;
+      /* Adjust this value based on the height of the navbar */
+    }
   </style>
 </head>
 
 <body>
+  <div id="filterNavbar">
+    <span class="logo">SPREE WITH MOCHI</span>
+    <!-- Hamburger Icon -->
+    <div id="hamburgerMenuIcon" onclick="toggleMenu()">
+      &#9776;
+      <!-- This is the hamburger icon (three horizontal bars) -->
+    </div>
+
+    <!-- Side Menu -->
+    <div id="sideMenu">
+      <a href="javascript:void(0)" class="closeBtn" onclick="toggleMenu()">&times;</a>
+      <p>Pages</p>
+      <a href="/">Home</a>
+      <a href="/sanriospree/">Sanrio Spree</a>
+    </div>
+
+  </div>
   <div class="window">
     <div class="pdt">
       <img class="goodsImg" alt="CASIO electronic dial quartz watch F-201WA-9AJH 1 piece"
@@ -242,8 +358,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO electronic dial quartz watch F-91W-1JH 1 piece"
-        src="./images/4549526295508.jpg">
+      <img class="goodsImg" alt="CASIO electronic dial quartz watch F-91W-1JH 1 piece" src="./images/4549526295508.jpg">
       <p class="pdtname">Item code: A02</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -264,8 +379,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7B2LLJH 1 piece"
-        src="./images/4549526295591.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7B2LLJH 1 piece" src="./images/4549526295591.jpg">
       <p class="pdtname">Item code: A04</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -275,8 +389,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-9ELJH 1 piece"
-        src="./images/4549526295614.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-9ELJH 1 piece" src="./images/4549526295614.jpg">
       <p class="pdtname">Item code: A05</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -286,8 +399,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch LQ-142-7BJH 1 piece"
-        src="./images/4549526294266.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch LQ-142-7BJH 1 piece" src="./images/4549526294266.jpg">
       <p class="pdtname">Item code: A06</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -374,8 +486,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7BLLJH 1 piece"
-        src="./images/4549526295607.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24-7BLLJH 1 piece" src="./images/4549526295607.jpg">
       <p class="pdtname">Item code: A14</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -385,8 +496,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-27-7BJH 1 piece"
-        src="./images/4549526294198.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-27-7BJH 1 piece" src="./images/4549526294198.jpg">
       <p class="pdtname">Item code: A15</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -451,8 +561,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-1AJH 1 piece"
-        src="./images/4549526295409.jpg">
+      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-1AJH 1 piece" src="./images/4549526295409.jpg">
       <p class="pdtname">Item code: A21</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -473,8 +582,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-1BJH 1 piece"
-        src="./images/4549526295621.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-1BJH 1 piece" src="./images/4549526295621.jpg">
       <p class="pdtname">Item code: A23</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -495,8 +603,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-4BJH 1 piece"
-        src="./images/4549526295751.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-4BJH 1 piece" src="./images/4549526295751.jpg">
       <p class="pdtname">Item code: A25</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -517,8 +624,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24D-7EJH 1 piece"
-        src="./images/4549526295911.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MQ-24D-7EJH 1 piece" src="./images/4549526295911.jpg">
       <p class="pdtname">Item code: A27</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -550,8 +656,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-7AJH 1 piece"
-        src="./images/4549526295416-1.jpg">
+      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80-7AJH 1 piece" src="./images/4549526295416-1.jpg">
       <p class="pdtname">Item code: A30</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -583,8 +688,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-7EJH 1 piece"
-        src="./images/4549526295638.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MRW-200HJ-7EJH 1 piece" src="./images/4549526295638.jpg">
       <p class="pdtname">Item code: A33</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -594,8 +698,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1BJH 1 piece"
-        src="./images/4549526295737.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1BJH 1 piece" src="./images/4549526295737.jpg">
       <p class="pdtname">Item code: A34</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -605,8 +708,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch W-215H-1AJH 1 piece"
-        src="./images/4549526295805.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch W-215H-1AJH 1 piece" src="./images/4549526295805.jpg">
       <p class="pdtname">Item code: A35</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -660,8 +762,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80V-3BJH 1 piece"
-        src="./images/4549526295430.jpg">
+      <img class="goodsImg" alt="CASIO double-hand quartz watch AW-80V-3BJH 1 piece" src="./images/4549526295430.jpg">
       <p class="pdtname">Item code: A40</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -726,8 +827,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MTP-1402L-7BJH 1 piece"
-        src="./images/4549526295706.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MTP-1402L-7BJH 1 piece" src="./images/4549526295706.jpg">
       <p class="pdtname">Item code: A46</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -737,8 +837,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-59-7BJH 1 piece"
-        src="./images/4549526295775.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-59-7BJH 1 piece" src="./images/4549526295775.jpg">
       <p class="pdtname">Item code: A47</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -748,8 +847,7 @@
       </div>
     </div>
     <div class="pdt">
-      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1B2JH 1 piece"
-        src="./images/4549526295744.jpg">
+      <img class="goodsImg" alt="CASIO three-hand quartz watch MW-240-1B2JH 1 piece" src="./images/4549526295744.jpg">
       <p class="pdtname">Item code: A48</p>
       <div class="desc">
         <h4 class="pdtname">
@@ -762,8 +860,7 @@
   <!-- Shopping Cart Image (Fixed position) -->
   <div id="cartIconWrapper"
     style="position: fixed; bottom: 20px; right: 10px; cursor: pointer;background: #fff;border-radius: 100%;">
-    <img src="https://spreewithmochi.github.io/images/cart2.png" alt="Shopping Cart"
-      style="width: 60px; height: auto;">
+    <img src="https://spreewithmochi.github.io/images/cart2.png" alt="Shopping Cart" style="width: 60px; height: auto;">
     <span id="cartCount"
       style="position: absolute; top: -5px; right: -5px; background-color: #E91E63; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
   </div>
@@ -786,6 +883,16 @@
   </div>
 
   <script>
+    function toggleMenu() {
+      const sideMenu = document.getElementById("sideMenu");
+      if (sideMenu.style.width === "40vw") {
+        sideMenu.style.width = "0"; // Close the menu
+        sideMenu.classList.remove("open");
+      } else {
+        sideMenu.style.width = "40vw"; // Open the menu
+        sideMenu.classList.add("open");
+      }
+    }
     // Create an array to store cart items (load from localStorage if available)
     const cartKey = 'cart_casio';
     let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
