@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>spree with mochi — admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #FBF6EE;
+    --bubblegum: #FF6FA0;
+    --plum: #2C1B33;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--plum);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.4rem;
+    padding: 24px 20px 0;
+    margin: 0;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 60px; }
+
+  #loginBox {
+    max-width: 320px;
+    margin: 80px auto;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 24px rgba(44,27,51,0.12);
+    text-align: center;
+  }
+  #loginBox input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 2px solid rgba(44,27,51,0.15);
+    font-size: 0.95rem;
+  }
+  #loginBox button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border: none;
+    border-radius: 999px;
+    background: var(--plum);
+    color: var(--cream);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #loginError { color: var(--bubblegum); font-size: 0.8rem; min-height: 1.2em; margin-top: 6px; }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(44,27,51,0.08);
+  }
+  .row img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .row .info { flex: 1; min-width: 0; }
+  .row .name { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 0.9rem; }
+  .row .category { font-size: 0.75rem; color: rgba(44,27,51,0.55); }
+  .row .price-edit {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .row .price-edit input {
+    width: 70px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    border: 2px solid rgba(44,27,51,0.15);
+    font-size: 0.85rem;
+  }
+  .row button {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .save-btn { background: var(--plum); color: var(--cream); }
+  .delete-btn { background: var(--bubblegum); color: white; }
+  .status { font-size: 0.7rem; color: rgba(44,27,51,0.5); margin-top: 4px; }
+  #signOutBtn {
+    margin: 16px 20px 0;
+    background: none;
+    border: 2px solid var(--plum);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="loginBox">
+  <h1 style="padding:0;">Admin login</h1>
+  <input type="email" id="email" placeholder="Email" autocomplete="username" />
+  <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+  <button id="loginBtn">Log in</button>
+  <div id="loginError"></div>
+</div>
+
+<div id="adminPanel" style="display:none;">
+  <button id="signOutBtn">Sign out</button>
+  <h1>Manage products</h1>
+  <div class="wrap" id="productList"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ---- Same Firebase project config as the main site ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyCmC5OuFO8dqfy3Br8bO-fTTZO640ZHk3E",
+    authDomain: "spreepost-bot.firebaseapp.com",
+    projectId: "spreepost-bot",
+    storageBucket: "spreepost-bot.firebasestorage.app",
+    messagingSenderId: "230577017990",
+    appId: "1:230577017990:web:536b5e9cb04cc564a2ed07"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const loginBox = document.getElementById("loginBox");
+  const adminPanel = document.getElementById("adminPanel");
+  const loginError = document.getElementById("loginError");
+  const productList = document.getElementById("productList");
+
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    loginError.textContent = "";
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      loginError.textContent = "Login failed — check email/password.";
+    }
+  });
+
+  document.getElementById("signOutBtn").addEventListener("click", () => signOut(auth));
+
+  let unsubscribeProducts = null;
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loginBox.style.display = "none";
+      adminPanel.style.display = "block";
+      startListening();
+    } else {
+      loginBox.style.display = "block";
+      adminPanel.style.display = "none";
+      if (unsubscribeProducts) unsubscribeProducts();
+    }
+  });
+
+  function startListening() {
+    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+    unsubscribeProducts = onSnapshot(q, (snapshot) => {
+      const products = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderList(products);
+    });
+  }
+
+  function renderList(products) {
+    if (products.length === 0) {
+      productList.innerHTML = `<p>No products yet.</p>`;
+      return;
+    }
+    productList.innerHTML = products.map(p => `
+      <div class="row" data-id="${p.id}">
+        <img src="${p.imageUrl}" alt="${p.name}" />
+        <div class="info">
+          <div class="name">${p.name}</div>
+          <div class="category">${p.category}</div>
+          <div class="price-edit">
+            $<input type="number" step="0.01" value="${Number(p.price).toFixed(2)}" class="price-input" />
+            <button class="save-btn">Save</button>
+            <button class="delete-btn">Delete</button>
+          </div>
+          <div class="status"></div>
+        </div>
+      </div>
+    `).join("");
+
+    productList.querySelectorAll(".row").forEach(row => {
+      const id = row.dataset.id;
+      const statusEl = row.querySelector(".status");
+
+      row.querySelector(".save-btn").addEventListener("click", async () => {
+        const newPrice = parseFloat(row.querySelector(".price-input").value);
+        if (isNaN(newPrice)) {
+          statusEl.textContent = "Enter a valid number.";
+          return;
+        }
+        try {
+          await updateDoc(doc(db, "products", id), { price: newPrice });
+          statusEl.textContent = "Saved ✓";
+        } catch (err) {
+          statusEl.textContent = "Failed to save.";
+        }
+      });
+
+      row.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (!confirm("Delete this product? This can't be undone.")) return;
+        try {
+          await deleteDoc(doc(db, "products", id));
+        } catch (err) {
+          statusEl.textContent = "Failed to delete.";
+        }
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
