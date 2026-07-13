@@ -22,11 +22,11 @@
   body {
     margin: 0;
     background-color: var(--cream);
-    background-image:
+    /* background-image:
       radial-gradient(circle at 8% 12%, rgba(170,255,255,1) 0 60px, transparent 62px),
       radial-gradient(circle at 85% 8%, rgba(255,191,221,1) 0 90px, transparent 92px),
       radial-gradient(circle at 60% 85%, rgba(255,252,170,1) 0 110px, transparent 112px),
-      radial-gradient(circle at 20% 70%, rgba(255,97,191,1) 0 70px, transparent 72px);
+      radial-gradient(circle at 20% 70%, rgba(255,97,191,1) 0 70px, transparent 72px); */
     color: var(--plum);
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
@@ -462,8 +462,8 @@
     } else {
       cart.push({
         id: product.id,
-        name: product.name,
-        price: Number(product.price),
+        name: product.category,
+        price: product.price == null ? null : Number(product.price),
         imageUrl: product.imageUrl,
         qty: 1,
       });
@@ -492,7 +492,7 @@
   }
 
   function cartSubtotal() {
-    return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    return cart.reduce((sum, i) => sum + (i.price == null ? 0 : i.price) * i.qty, 0);
   }
 
   // Keeps the cart in sync with the live product list: if a product was
@@ -504,7 +504,7 @@
       .filter(item => byId.has(item.id))
       .map(item => {
         const current = byId.get(item.id);
-        return { ...item, price: Number(current.price), name: current.name, imageUrl: current.imageUrl };
+        return { ...item, price: current.price == null ? null : Number(current.price), name: current.category, imageUrl: current.imageUrl };
       });
     saveCart();
   }
@@ -548,7 +548,7 @@
           <img src="${i.imageUrl}" alt="${i.name}" />
           <div class="info">
             <div class="name">${i.name}</div>
-            <div class="price">$${i.price.toFixed(2)} each</div>
+            <div class="price">${i.price == null ? "Price on request" : `$${i.price.toFixed(2)} each`}</div>
             <div class="qty-controls">
               <button data-action="dec" data-id="${i.id}">−</button>
               <span>${i.qty}</span>
@@ -601,18 +601,21 @@
   }
 
   // Renders the cart as a receipt-style image, including each product's
-  // thumbnail photo alongside its name, quantity, and price.
+  // thumbnail photo alongside its name, quantity, and price. Drawn at 2x
+  // pixel density so it stays sharp and readable even for a long cart.
   async function buildReceiptCanvas() {
-    const padding = 28;
-    const thumbSize = 48;
-    const rowHeight = 62;
-    const width = 480;
-    const height = padding * 2 + 90 + cart.length * rowHeight + 70;
+    const SCALE = 2;
+    const padding = 40;
+    const thumbSize = 76;
+    const rowHeight = 96;
+    const width = 620;
+    const height = padding * 2 + 110 + cart.length * rowHeight + 90;
 
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * SCALE;
+    canvas.height = height * SCALE;
     const ctx = canvas.getContext("2d");
+    ctx.scale(SCALE, SCALE);
 
     // Preload all thumbnails up front (in parallel).
     const images = await Promise.all(cart.map(i => loadImageForCanvas(i.imageUrl)));
@@ -621,26 +624,27 @@
     ctx.fillRect(0, 0, width, height);
 
     ctx.fillStyle = "#2C1B33";
-    ctx.font = "600 24px Fredoka, sans-serif";
-    ctx.fillText("spree with mochi — order", padding, padding + 20);
+    ctx.font = "600 32px Fredoka, sans-serif";
+    ctx.fillText("spree with mochi — order", padding, padding + 24);
 
-    ctx.font = "400 13px Inter, sans-serif";
+    ctx.font = "400 17px Inter, sans-serif";
     ctx.fillStyle = "rgba(44,27,51,0.6)";
-    ctx.fillText(new Date().toLocaleString(), padding, padding + 42);
+    ctx.fillText(new Date().toLocaleString(), padding, padding + 52);
 
     ctx.strokeStyle = "rgba(44,27,51,0.15)";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(padding, padding + 58);
-    ctx.lineTo(width - padding, padding + 58);
+    ctx.moveTo(padding, padding + 72);
+    ctx.lineTo(width - padding, padding + 72);
     ctx.stroke();
 
-    let y = padding + 74;
+    let y = padding + 96;
     cart.forEach((item, idx) => {
       const img = images[idx];
-      const textX = padding + (img ? thumbSize + 14 : 0);
+      const textX = padding + (img ? thumbSize + 20 : 0);
 
       if (img) {
-        drawRoundedImage(ctx, img, padding, y, thumbSize, 8);
+        drawRoundedImage(ctx, img, padding, y, thumbSize, 12);
       } else {
         // Fallback placeholder block if the photo couldn't be loaded.
         ctx.fillStyle = "rgba(44,27,51,0.1)";
@@ -649,19 +653,19 @@
 
       const textY = y + thumbSize / 2;
 
-      ctx.font = "600 15px Fredoka, sans-serif";
+      ctx.font = "600 21px Fredoka, sans-serif";
       ctx.fillStyle = "#2C1B33";
-      ctx.fillText(item.name, textX, textY - 6);
+      ctx.fillText(item.name, textX, textY - 8);
 
-      ctx.font = "400 13px Inter, sans-serif";
+      ctx.font = "400 17px Inter, sans-serif";
       ctx.fillStyle = "rgba(44,27,51,0.6)";
-      ctx.fillText(`×${item.qty}`, textX, textY + 14);
+      ctx.fillText(`×${item.qty}`, textX, textY + 18);
 
-      const priceText = `$${(item.price * item.qty).toFixed(2)}`;
-      ctx.font = "500 15px Inter, sans-serif";
+      const priceText = item.price == null ? "Price on request" : `$${(item.price * item.qty).toFixed(2)}`;
+      ctx.font = "500 20px Inter, sans-serif";
       ctx.fillStyle = "#2C1B33";
       const tw = ctx.measureText(priceText).width;
-      ctx.fillText(priceText, width - padding - tw, textY + 4);
+      ctx.fillText(priceText, width - padding - tw, textY + 6);
 
       y += rowHeight;
     });
@@ -672,16 +676,19 @@
     ctx.lineTo(width - padding, y + 6);
     ctx.stroke();
 
-    ctx.font = "600 18px Fredoka, sans-serif";
+    ctx.font = "600 26px Fredoka, sans-serif";
     ctx.fillStyle = "#FF6FA0";
     const subtotalText = `Subtotal: $${cartSubtotal().toFixed(2)}`;
-    ctx.fillText(subtotalText, padding, y + 36);
+    ctx.fillText(subtotalText, padding, y + 44);
 
     return canvas;
   }
 
   function cartAsText() {
-    const lines = cart.map(i => `${i.name} ×${i.qty} — $${(i.price * i.qty).toFixed(2)}`);
+    const lines = cart.map(i => {
+      const priceText = i.price == null ? "price on request" : `$${(i.price * i.qty).toFixed(2)}`;
+      return `${i.name} ×${i.qty} — ${priceText}`;
+    });
     lines.push(`Subtotal: $${cartSubtotal().toFixed(2)}`);
     return lines.join("\n");
   }
@@ -702,7 +709,10 @@
       await navigator.clipboard.write([
         new ClipboardItem({ "image/png": blob }),
       ]);
-      checkoutStatus.textContent = "Order copied as an image — paste it in Telegram!";
+      checkoutStatus.innerHTML = `Order copied as an image — paste it in Telegram! <a href="https://t.me/jeankuah" target="_blank">@jeankuah</a>`;
+      setTimeout(() => {
+        checkoutStatus.innerHTML = "";
+      }, 5000); 
       return;
     } catch (err) {
       // Fall through to text copy + download link below.
@@ -734,7 +744,7 @@
   function render() {
     const filtered = activeCategory === "all"
       ? allProducts
-      : allProducts.filter(p => p.category === activeCategory);
+      : allProducts.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
 
     if (filtered.length === 0) {
       contentEl.className = "empty";
@@ -747,9 +757,9 @@
       const qtyInCart = cartQty(p.id);
       return `
       <div class="card" style="transform: rotate(${rotationFor(i)}deg)">
-        <img src="${p.imageUrl}" alt="${p.name}" loading="lazy" />
-        <div class="name">${p.name}</div>
-        <div class="price">$${Number(p.price).toFixed(2)}</div>
+        <img src="${p.imageUrl}" alt="${p.category}" loading="lazy" />
+        <div class="name">${p.category}</div>
+        <div class="price">${p.price == null ? "Price on request" : `$${Number(p.price).toFixed(2)}`}</div>
         <button class="add-btn" data-id="${p.id}">
           ${qtyInCart > 0 ? `In cart · ${qtyInCart}` : "Add to cart"}
         </button>
@@ -767,9 +777,15 @@
   }
 
   function renderTabs() {
-    const categories = [...new Set(allProducts.map(p => p.category))];
+    const seen = new Map(); // lowercase key -> first-seen display casing
+    allProducts.forEach(p => {
+      const key = p.category.toLowerCase();
+      if (!seen.has(key)) seen.set(key, p.category);
+    });
+    const categories = [...seen.values()];
+
     tabsEl.innerHTML = ["all", ...categories].map(cat => `
-      <button class="tab ${cat === activeCategory ? "active" : ""}" data-category="${cat}">
+      <button class="tab ${cat.toLowerCase() === activeCategory.toLowerCase() ? "active" : ""}" data-category="${cat}">
         ${cat === "all" ? "All" : cat}
       </button>
     `).join("");
