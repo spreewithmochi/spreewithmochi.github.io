@@ -153,6 +153,10 @@
     font-size: 0.95rem;
   }
 
+  .filter-empty {
+    grid-column: 1 / -1;
+  }
+
   footer {
     text-align: center;
     padding: 24px;
@@ -565,9 +569,19 @@
     localStorage.setItem(NOTES_KEY, cartNotesEl.value);
   });
 
+  // The cart items list is only rebuilt (including every thumbnail <img>)
+  // when the drawer is actually open. Cart actions elsewhere on the page
+  // just flip this flag so the rebuild happens lazily next time the
+  // drawer opens, instead of reloading every cart image on every click.
+  let cartItemsDirty = true;
+
   function openCart() {
     cartOverlay.classList.add("open");
     cartDrawer.classList.add("open");
+    if (cartItemsDirty) {
+      renderCartItems();
+      cartItemsDirty = false;
+    }
   }
   function closeCart() {
     cartOverlay.classList.remove("open");
@@ -577,7 +591,9 @@
   cartClose.addEventListener("click", closeCart);
   cartOverlay.addEventListener("click", closeCart);
 
-  function renderCart() {
+  // Cheap: just the little badge count on the floating cart button.
+  // Safe to call on every cart change with no risk of image reloads.
+  function renderCartBadge() {
     const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
     if (totalQty > 0) {
       cartBadge.style.display = "flex";
@@ -585,7 +601,11 @@
     } else {
       cartBadge.style.display = "none";
     }
+  }
 
+  // Heavier: rebuilds the full item list (with thumbnails) inside the
+  // drawer. Only call this when the drawer is open or about to open.
+  function renderCartItems() {
     if (cart.length === 0) {
       cartItemsEl.innerHTML = `<div class="cart-empty">Your cart is empty — tap "Add to cart" on anything you like.</div>`;
     } else {
@@ -614,6 +634,18 @@
           else if (btn.dataset.action === "remove") removeFromCart(id);
         });
       });
+    }
+  }
+
+  // Called after every cart change. Updates the badge immediately; the
+  // heavier item list only rebuilds now if the drawer is already open
+  // (e.g. adjusting quantity from inside it), otherwise it's deferred.
+  function renderCart() {
+    renderCartBadge();
+    if (cartDrawer.classList.contains("open")) {
+      renderCartItems();
+    } else {
+      cartItemsDirty = true;
     }
   }
 
@@ -830,21 +862,17 @@
   }
 
   function render() {
-    const filtered = activeCategory === "all"
-      ? allProducts
-      : allProducts.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
-
-    if (filtered.length === 0) {
+    if (allProducts.length === 0) {
       contentEl.className = "empty";
-      contentEl.innerHTML = "nothing posted in this category yet — check back soon.";
+      contentEl.innerHTML = "nothing posted yet — check back soon.";
       return;
     }
 
     contentEl.className = "grid";
-    contentEl.innerHTML = filtered.map((p, i) => {
+    contentEl.innerHTML = allProducts.map((p, i) => {
       const qtyInCart = cartQty(p.id);
       return `
-      <div class="card" style="transform: rotate(${rotationFor(i)}deg)">
+      <div class="card" data-category="${p.category.toLowerCase()}" style="transform: rotate(${rotationFor(i)}deg)">
         <img src="${p.imageUrl}" alt="${p.category}" loading="lazy" />
         <div class="category">${p.category}</div>
         <div class="name">${displayName(p)}</div>
@@ -862,6 +890,35 @@
         addToCart(product);
       });
     });
+
+    applyCategoryFilter();
+  }
+
+  // Cheap: just shows/hides existing cards via CSS instead of recreating
+  // any DOM (and therefore never reloads a single image) when switching
+  // category tabs.
+  function applyCategoryFilter() {
+    if (contentEl.className !== "grid") return; // nothing rendered yet (e.g. empty state)
+
+    const cards = contentEl.querySelectorAll(".card");
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const matches = activeCategory === "all" || card.dataset.category === activeCategory.toLowerCase();
+      card.style.display = matches ? "" : "none";
+      if (matches) visibleCount++;
+    });
+
+    let emptyMsg = contentEl.querySelector(".filter-empty");
+    if (visibleCount === 0) {
+      if (!emptyMsg) {
+        emptyMsg = document.createElement("div");
+        emptyMsg.className = "filter-empty empty";
+        emptyMsg.textContent = "nothing posted in this category yet — check back soon.";
+        contentEl.appendChild(emptyMsg);
+      }
+    } else if (emptyMsg) {
+      emptyMsg.remove();
+    }
   }
 
   function renderTabs() {
@@ -882,16 +939,25 @@
       btn.addEventListener("click", () => {
         activeCategory = btn.dataset.category;
         renderTabs();
-        render();
+        applyCategoryFilter();
       });
     });
   }
 
   renderCart();
 
+  // Pinned products (checked in admin.html) always float to the top of
+  // whatever's currently shown — the "All" tab and every category tab.
+  // Everything else keeps the normal newest-first order.
+  function sortWithPinnedFirst(products) {
+    const pinned = products.filter(p => p.pinned);
+    const rest = products.filter(p => !p.pinned);
+    return [...pinned, ...rest];
+  }
+
   const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
   onSnapshot(q, (snapshot) => {
-    allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    allProducts = sortWithPinnedFirst(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     reconcileCart(allProducts);
     renderCart();
     renderTabs();

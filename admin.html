@@ -105,6 +105,21 @@
     cursor: pointer;
   }
   .save-btn { background: var(--plum); color: var(--cream); }
+  .pin-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--plum);
+    margin: 4px 0;
+    cursor: pointer;
+  }
+  .pin-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--bubblegum);
+    cursor: pointer;
+  }
   .delete-btn { background: var(--bubblegum); color: white; }
   .status { font-size: 0.7rem; color: rgba(44,27,51,0.5); margin-top: 4px; }
   #signOutBtn {
@@ -243,6 +258,10 @@
         <img src="${p.imageUrl}" alt="${p.category}" />
         <div class="info">
           <div class="name">${displayName(p)}</div>
+          <label class="pin-label">
+            <input type="checkbox" class="pin-input" ${p.pinned ? "checked" : ""} />
+            Pin to top
+          </label>
           <div class="price-edit">
             <input type="text" value="${p.category}" class="category-input" placeholder="category" />
             <input type="number" value="${p.itemNo ?? ""}" class="itemno-input" placeholder="item no" style="width:60px;" />
@@ -258,6 +277,16 @@
     productList.querySelectorAll(".row").forEach(row => {
       const id = row.dataset.id;
       const statusEl = row.querySelector(".status");
+
+      row.querySelector(".pin-input").addEventListener("change", async (e) => {
+        try {
+          await updateDoc(doc(db, "products", id), { pinned: e.target.checked });
+          statusEl.textContent = e.target.checked ? "Pinned ✓" : "Unpinned";
+        } catch (err) {
+          statusEl.textContent = "Failed to update pin.";
+          e.target.checked = !e.target.checked; // revert on failure
+        }
+      });
 
       row.querySelector(".save-btn").addEventListener("click", async () => {
         const priceRaw = row.querySelector(".price-input").value.trim();
