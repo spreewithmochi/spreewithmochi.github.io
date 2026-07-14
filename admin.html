@@ -144,6 +144,9 @@
   import {
     getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import {
+    getStorage, ref, deleteObject
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
   // ---- Same Firebase project config as the main site ----
   const firebaseConfig = {
@@ -158,6 +161,7 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   const loginBox = document.getElementById("loginBox");
   const adminPanel = document.getElementById("adminPanel");
@@ -191,10 +195,40 @@
     }
   });
 
+  function displayName(p) {
+    return p.itemNo != null ? `Item No. ${p.itemNo}` : "Unnumbered item";
+  }
+
+  // Derives the Storage object path (e.g. "products/xxx.jpg") from the
+  // public download URL stored on the product, so we can delete the actual
+  // file, not just the Firestore doc.
+  function storagePathFromUrl(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname === "storage.googleapis.com") {
+        // /<bucket>/products/xxx.jpg
+        const parts = u.pathname.split("/").filter(Boolean);
+        parts.shift(); // drop bucket
+        return decodeURIComponent(parts.join("/"));
+      }
+      if (u.hostname === "firebasestorage.googleapis.com") {
+        // /v0/b/<bucket>/o/products%2Fxxx.jpg
+        const match = u.pathname.match(/\/o\/(.+)$/);
+        return match ? decodeURIComponent(match[1]) : null;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  let productsById = new Map();
+
   function startListening() {
     const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
     unsubscribeProducts = onSnapshot(q, (snapshot) => {
       const products = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      productsById = new Map(products.map(p => [p.id, p]));
       renderList(products);
     });
   }
@@ -206,11 +240,12 @@
     }
     productList.innerHTML = products.map(p => `
       <div class="row" data-id="${p.id}">
-        <img src="${p.imageUrl}" alt="${p.name}" />
+        <img src="${p.imageUrl}" alt="${p.category}" />
         <div class="info">
-          <div class="name">${p.name}</div>
+          <div class="name">${displayName(p)}</div>
           <div class="price-edit">
             <input type="text" value="${p.category}" class="category-input" placeholder="category" />
+            <input type="number" value="${p.itemNo ?? ""}" class="itemno-input" placeholder="item no" style="width:60px;" />
             $<input type="number" step="0.01" value="${p.price == null ? "" : Number(p.price).toFixed(2)}" class="price-input" placeholder="(no price)" />
             <button class="save-btn">Save</button>
             <button class="delete-btn">Delete</button>
@@ -228,6 +263,9 @@
         const priceRaw = row.querySelector(".price-input").value.trim();
         const newPrice = priceRaw === "" ? null : parseFloat(priceRaw);
         const newCategory = row.querySelector(".category-input").value.trim();
+        const itemNoRaw = row.querySelector(".itemno-input").value.trim();
+        const newItemNo = itemNoRaw === "" ? null : parseInt(itemNoRaw, 10);
+
         if (priceRaw !== "" && isNaN(newPrice)) {
           statusEl.textContent = "Enter a valid price, or leave blank for none.";
           return;
@@ -236,8 +274,12 @@
           statusEl.textContent = "Category can't be empty.";
           return;
         }
+        if (itemNoRaw !== "" && isNaN(newItemNo)) {
+          statusEl.textContent = "Item No. must be a number.";
+          return;
+        }
         try {
-          await updateDoc(doc(db, "products", id), { price: newPrice, category: newCategory });
+          await updateDoc(doc(db, "products", id), { price: newPrice, category: newCategory, itemNo: newItemNo });
           statusEl.textContent = "Saved ✓";
         } catch (err) {
           statusEl.textContent = "Failed to save.";
@@ -247,6 +289,19 @@
       row.querySelector(".delete-btn").addEventListener("click", async () => {
         if (!confirm("Delete this product? This can't be undone.")) return;
         try {
+          const product = productsById.get(id);
+          if (product?.imageUrl) {
+            const path = storagePathFromUrl(product.imageUrl);
+            if (path) {
+              try {
+                await deleteObject(ref(storage, path));
+              } catch (imgErr) {
+                // Image may already be gone, or a CORS/permissions hiccup —
+                // don't block deleting the product listing either way.
+                console.warn("Couldn't delete image from Storage:", imgErr);
+              }
+            }
+          }
           await deleteDoc(doc(db, "products", id));
         } catch (err) {
           statusEl.textContent = "Failed to delete.";

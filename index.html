@@ -290,6 +290,13 @@
     flex-shrink: 0;
   }
   .cart-item .info { flex: 1; min-width: 0; }
+  .cart-item .info .category {
+    font-size: 0.7rem;
+    color: rgba(44,27,51,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 1px;
+  }
   .cart-item .info .name {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
@@ -339,12 +346,21 @@
     padding: 16px 20px 20px;
     border-top: 2px solid rgba(44,27,51,0.08);
   }
-  .cart-subtotal {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
+  .cart-notes {
+    width: 100%;
+    resize: vertical;
+    min-height: 44px;
     margin-bottom: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 2px solid rgba(44,27,51,0.15);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    color: var(--plum);
+  }
+  .cart-notes:focus {
+    outline: none;
+    border-color: var(--bubblegum);
   }
   .checkout-btn {
     width: 100%;
@@ -397,10 +413,7 @@
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
-    <div class="cart-subtotal">
-      <span>Subtotal</span>
-      <span id="cartSubtotal">$0.00</span>
-    </div>
+    <textarea id="cartNotes" class="cart-notes" placeholder="leave item number and character if applicable" rows="2"></textarea>
     <button class="checkout-btn" id="checkoutBtn">Checkout — copy order</button>
     <div class="checkout-status" id="checkoutStatus"></div>
   </div>
@@ -434,9 +447,16 @@
   let allProducts = [];
   let activeCategory = "all";
 
+  // Product "name" is derived from its item number so admin edits to the
+  // number instantly reflect everywhere, with no separate field to drift
+  // out of sync.
+  function displayName(p) {
+    return p.itemNo != null ? `Item No. ${p.itemNo}` : "Unnumbered item";
+  }
+
   // ---------------- Cart ----------------
   const CART_KEY = "spreewithmochi_cart";
-  let cart = loadCart(); // [{id, name, price, imageUrl, qty}]
+  let cart = loadCart(); // [{id, category, itemNo, price, imageUrl, qty}]
 
   function loadCart() {
     try {
@@ -462,7 +482,8 @@
     } else {
       cart.push({
         id: product.id,
-        name: product.category,
+        category: product.category,
+        itemNo: product.itemNo ?? null,
         price: product.price == null ? null : Number(product.price),
         imageUrl: product.imageUrl,
         qty: 1,
@@ -504,7 +525,13 @@
       .filter(item => byId.has(item.id))
       .map(item => {
         const current = byId.get(item.id);
-        return { ...item, price: current.price == null ? null : Number(current.price), name: current.category, imageUrl: current.imageUrl };
+        return {
+          ...item,
+          price: current.price == null ? null : Number(current.price),
+          category: current.category,
+          itemNo: current.itemNo ?? null,
+          imageUrl: current.imageUrl,
+        };
       });
     saveCart();
   }
@@ -515,9 +542,16 @@
   const cartDrawer = document.getElementById("cartDrawer");
   const cartClose = document.getElementById("cartClose");
   const cartItemsEl = document.getElementById("cartItems");
-  const cartSubtotalEl = document.getElementById("cartSubtotal");
+  const cartNotesEl = document.getElementById("cartNotes");
   const checkoutBtn = document.getElementById("checkoutBtn");
   const checkoutStatus = document.getElementById("checkoutStatus");
+
+  // Notes persist across reloads too, same as the cart itself.
+  const NOTES_KEY = "spreewithmochi_notes";
+  cartNotesEl.value = localStorage.getItem(NOTES_KEY) || "";
+  cartNotesEl.addEventListener("input", () => {
+    localStorage.setItem(NOTES_KEY, cartNotesEl.value);
+  });
 
   function openCart() {
     cartOverlay.classList.add("open");
@@ -545,9 +579,10 @@
     } else {
       cartItemsEl.innerHTML = cart.map(i => `
         <div class="cart-item">
-          <img src="${i.imageUrl}" alt="${i.name}" />
+          <img src="${i.imageUrl}" alt="${i.category}" />
           <div class="info">
-            <div class="name">${i.name}</div>
+            <div class="category">${i.category}</div>
+            <div class="name">${displayName(i)}</div>
             <div class="price">${i.price == null ? "Price on request" : `$${i.price.toFixed(2)} each`}</div>
             <div class="qty-controls">
               <button data-action="dec" data-id="${i.id}">−</button>
@@ -568,8 +603,6 @@
         });
       });
     }
-
-    cartSubtotalEl.textContent = `$${cartSubtotal().toFixed(2)}`;
   }
 
   // Loads an image so it can be drawn onto canvas. Requires the image's
@@ -600,16 +633,42 @@
     ctx.restore();
   }
 
+  function wrapText(ctx, text, maxWidth) {
+    const words = text.split(/\s+/);
+    const lines = [];
+    let current = "";
+    words.forEach((word) => {
+      const test = current ? `${current} ${word}` : word;
+      if (ctx.measureText(test).width > maxWidth && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = test;
+      }
+    });
+    if (current) lines.push(current);
+    return lines;
+  }
+
   // Renders the cart as a receipt-style image, including each product's
-  // thumbnail photo alongside its name, quantity, and price. Drawn at 2x
-  // pixel density so it stays sharp and readable even for a long cart.
+  // thumbnail photo alongside its category, item name, and price. Drawn at
+  // 2x pixel density so it stays sharp and readable even for a long cart.
   async function buildReceiptCanvas() {
     const SCALE = 2;
     const padding = 40;
     const thumbSize = 76;
     const rowHeight = 96;
     const width = 620;
-    const height = padding * 2 + 110 + cart.length * rowHeight + 90;
+    const notes = cartNotesEl.value.trim();
+
+    // Measure wrapped notes lines first (using a throwaway context) so the
+    // final canvas can be sized to fit them.
+    const measureCtx = document.createElement("canvas").getContext("2d");
+    measureCtx.font = "400 16px Inter, sans-serif";
+    const notesLines = notes ? wrapText(measureCtx, notes, width - padding * 2) : [];
+    const notesHeight = notes ? 40 + notesLines.length * 22 : 0;
+
+    const height = padding * 2 + 110 + cart.length * rowHeight + 90 + notesHeight;
 
     const canvas = document.createElement("canvas");
     canvas.width = width * SCALE;
@@ -653,13 +712,17 @@
 
       const textY = y + thumbSize / 2;
 
+      ctx.font = "400 13px Inter, sans-serif";
+      ctx.fillStyle = "rgba(44,27,51,0.5)";
+      ctx.fillText(item.category.toUpperCase(), textX, textY - 22);
+
       ctx.font = "600 21px Fredoka, sans-serif";
       ctx.fillStyle = "#2C1B33";
-      ctx.fillText(item.name, textX, textY - 8);
+      ctx.fillText(displayName(item), textX, textY - 2);
 
       ctx.font = "400 17px Inter, sans-serif";
       ctx.fillStyle = "rgba(44,27,51,0.6)";
-      ctx.fillText(`×${item.qty}`, textX, textY + 18);
+      ctx.fillText(`×${item.qty}`, textX, textY + 22);
 
       const priceText = item.price == null ? "Price on request" : `$${(item.price * item.qty).toFixed(2)}`;
       ctx.font = "500 20px Inter, sans-serif";
@@ -676,10 +739,19 @@
     ctx.lineTo(width - padding, y + 6);
     ctx.stroke();
 
-    ctx.font = "600 26px Fredoka, sans-serif";
-    ctx.fillStyle = "#FF6FA0";
-    const subtotalText = `Subtotal: $${cartSubtotal().toFixed(2)}`;
-    ctx.fillText(subtotalText, padding, y + 44);
+    if (notes) {
+      let notesY = y + 6 + 34;
+      ctx.font = "600 14px Fredoka, sans-serif";
+      ctx.fillStyle = "rgba(44,27,51,0.55)";
+      ctx.fillText("NOTES", padding, notesY);
+      notesY += 24;
+      ctx.font = "400 16px Inter, sans-serif";
+      ctx.fillStyle = "#2C1B33";
+      notesLines.forEach((line) => {
+        ctx.fillText(line, padding, notesY);
+        notesY += 22;
+      });
+    }
 
     return canvas;
   }
@@ -687,9 +759,13 @@
   function cartAsText() {
     const lines = cart.map(i => {
       const priceText = i.price == null ? "price on request" : `$${(i.price * i.qty).toFixed(2)}`;
-      return `${i.name} ×${i.qty} — ${priceText}`;
+      return `${i.category} — ${displayName(i)} ×${i.qty} — ${priceText}`;
     });
-    lines.push(`Subtotal: $${cartSubtotal().toFixed(2)}`);
+    const notes = cartNotesEl.value.trim();
+    if (notes) {
+      lines.push("");
+      lines.push(`Notes: ${notes}`);
+    }
     return lines.join("\n");
   }
 
@@ -758,7 +834,8 @@
       return `
       <div class="card" style="transform: rotate(${rotationFor(i)}deg)">
         <img src="${p.imageUrl}" alt="${p.category}" loading="lazy" />
-        <div class="name">${p.category}</div>
+        <div class="category">${p.category}</div>
+        <div class="name">${displayName(p)}</div>
         <div class="price">${p.price == null ? "Price on request" : `$${Number(p.price).toFixed(2)}`}</div>
         <button class="add-btn" data-id="${p.id}">
           ${qtyInCart > 0 ? `In cart · ${qtyInCart}` : "Add to cart"}
