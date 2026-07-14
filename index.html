@@ -475,6 +475,17 @@
     return item ? item.qty : 0;
   }
 
+  // Updates just the "Add to cart" / "In cart · N" label on the one button
+  // that changed, instead of re-rendering the whole product grid (which
+  // would recreate every <img> tag and cause a visible reload/flicker,
+  // especially on slow connections).
+  function syncAddButtonLabel(productId) {
+    const btn = contentEl.querySelector(`.add-btn[data-id="${productId}"]`);
+    if (!btn) return;
+    const qty = cartQty(productId);
+    btn.textContent = qty > 0 ? `In cart · ${qty}` : "Add to cart";
+  }
+
   function addToCart(product) {
     const existing = cart.find(i => i.id === product.id);
     if (existing) {
@@ -491,6 +502,7 @@
     }
     saveCart();
     renderCart();
+    syncAddButtonLabel(product.id);
   }
 
   function changeQty(productId, delta) {
@@ -502,14 +514,14 @@
     }
     saveCart();
     renderCart();
-    render(); // keep "Add to cart" button labels in sync
+    syncAddButtonLabel(productId);
   }
 
   function removeFromCart(productId) {
     cart = cart.filter(i => i.id !== productId);
     saveCart();
     renderCart();
-    render();
+    syncAddButtonLabel(productId);
   }
 
   function cartSubtotal() {
@@ -848,7 +860,6 @@
       btn.addEventListener("click", () => {
         const product = allProducts.find(p => p.id === btn.dataset.id);
         addToCart(product);
-        render();
       });
     });
   }
